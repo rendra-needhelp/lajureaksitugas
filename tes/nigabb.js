@@ -84,7 +84,6 @@ const questions = [
                 explanation: "Energi aktivasi adalah energi minimum yang diperlukan partikel untuk memulai reaksi."
             }
 ];
-
 let currentQuestion = 0;
 let score = 0;
 
@@ -116,17 +115,31 @@ function checkAnswer(selected) {
         document.getElementById('feedback').classList.add('wrong');
     }
     
-    document.getElementById('explanation').innerHTML = `<p><strong>Penjelasan:</strong> ${q.explanation}</p>`;
+    // Show explanation and next button immediately
+    document.getElementById('explanation').innerHTML = `
+        <p><strong>Penjelasan:</strong> ${q.explanation}</p>
+        <button onclick="nextQuestion()" class="next-button">Soal Berikutnya</button>
+    `;
     
-    setTimeout(() => {
-        currentQuestion++;
-        if (currentQuestion < questions.length) {
-            showQuestion();
-        } else {
-            showFinalScore();
-        }
-    }, 2000);
+    // Disable option buttons after answer
+    const optionButtons = document.getElementById('options').getElementsByTagName('button');
+    for (let button of optionButtons) {
+        button.disabled = true;
+    }
 }
+
+function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+        showQuestion();
+        document.getElementById('feedback').innerHTML = '';
+        document.getElementById('explanation').innerHTML = '';
+    } else {
+        showFinalScore();
+    }
+}
+// Initialize quiz
+showQuestion();
 
 function showFinalScore() {
     document.getElementById('quiz-container').classList.add('hidden');
